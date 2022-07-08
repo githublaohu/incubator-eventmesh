@@ -60,8 +60,7 @@ public class HookConfigOperationManage implements WebHookConfigOperation {
     /**
      * Initialize according to operationMode
      *
-     * @param operationMode file/nacos...
-     * @param config        Parameters required to initialize the behavior
+     * @param configurationWrapper file/nacos...
      */
     public HookConfigOperationManage(ConfigurationWrapper configurationWrapper) throws FileNotFoundException, NacosException {
 
@@ -74,6 +73,12 @@ public class HookConfigOperationManage implements WebHookConfigOperation {
         }
     }
 
+    /**
+     * Create nacos config server
+     *
+     * @param config        Parameters required to initialize the behavior
+     * @throws NacosException
+     */
     private void nacosModeInit(Properties config) throws NacosException {
         nacosConfigService = ConfigFactory.createConfigService(config);
     }
