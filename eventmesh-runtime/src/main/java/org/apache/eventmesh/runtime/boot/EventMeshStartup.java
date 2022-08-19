@@ -33,7 +33,7 @@ public class EventMeshStartup {
     public static void main(String[] args) throws Exception {
         try {
             ConfigurationWrapper configurationWrapper =
-                    new ConfigurationWrapper(EventMeshConstants.EVENTMESH_CONF_HOME,
+                    new ConfigurationWrapper("/leaning/space-work/java-source/incubator-eventmesh/eventmesh-runtime/conf",
                             EventMeshConstants.EVENTMESH_CONF_FILE, false);
             EventMeshHTTPConfiguration eventMeshHttpConfiguration = new EventMeshHTTPConfiguration(configurationWrapper);
             eventMeshHttpConfiguration.init();

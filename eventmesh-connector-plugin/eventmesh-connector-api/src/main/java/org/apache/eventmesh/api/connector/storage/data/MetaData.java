@@ -14,19 +14,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package org.apache.eventmesh.api.connector.storage.data;
 
-dependencies {
-    api project(":eventmesh-spi")
-    implementation project(":eventmesh-common")
-    api 'io.cloudevents:cloudevents-core'
+public class MetaData {
 
-    implementation 'io.opentelemetry:opentelemetry-api'
-    implementation 'io.opentelemetry:opentelemetry-sdk'
-
-    compileOnly 'org.projectlombok:lombok:1.18.22'
-    annotationProcessor 'org.projectlombok:lombok:1.18.22'
-
-    testCompileOnly 'org.projectlombok:lombok:1.18.22'
-    testAnnotationProcessor 'org.projectlombok:lombok:1.18.22'
-   
 }

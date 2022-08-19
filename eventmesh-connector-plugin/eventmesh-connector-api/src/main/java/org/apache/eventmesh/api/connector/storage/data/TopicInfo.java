@@ -14,19 +14,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package org.apache.eventmesh.api.connector.storage.data;
 
-dependencies {
-    api project(":eventmesh-spi")
-    implementation project(":eventmesh-common")
-    api 'io.cloudevents:cloudevents-core'
+/**
+ * {tablename-queue}
+ * @author laohu
+ *
+ */
+public class TopicInfo {
 
-    implementation 'io.opentelemetry:opentelemetry-api'
-    implementation 'io.opentelemetry:opentelemetry-sdk'
-
-    compileOnly 'org.projectlombok:lombok:1.18.22'
-    annotationProcessor 'org.projectlombok:lombok:1.18.22'
-
-    testCompileOnly 'org.projectlombok:lombok:1.18.22'
-    testAnnotationProcessor 'org.projectlombok:lombok:1.18.22'
-   
+    private String topicName;
+    
+    private int writeQueueNums;
+    
+    private int perm;
+    
+    private int topicSysFlag = 0;
+    
+    private boolean order = false; 
+    
 }
