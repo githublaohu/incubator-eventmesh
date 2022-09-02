@@ -35,6 +35,7 @@ import java.io.OutputStreamWriter;
 import java.nio.channels.FileLock;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Properties;
 
 import org.slf4j.Logger;
@@ -155,18 +156,18 @@ public class FileWebHookConfigOperation implements WebHookConfigOperation {
             // lock this file
             lock = fos.getChannel().lock();
             bw.write(JsonUtils.serialize(webHookConfig));
+            lock.release();
         } catch (IOException e) {
+        	if(Objects.nonNull(lock)) {
+        		try {
+					lock.release();
+				} catch (IOException e1) {
+					logger.error("lock release fail file path is :" , webhookConfigFile.getPath());
+				}
+        	}
             logger.error("write webhookConfig {} to file error", webHookConfig.getCallbackPath());
             return false;
-        } finally {
-            try {
-                if (lock != null) {
-                    lock.release();
-                }
-            } catch (IOException e) {
-                logger.warn("writeToFile finally caught an exception", e);
-            }
-        }
+        } 
         return true;
     }
 
@@ -177,8 +178,7 @@ public class FileWebHookConfigOperation implements WebHookConfigOperation {
     private File getWebhookConfigFile(WebHookConfig webHookConfig) {
         String webhookConfigFilePath = null;
         webhookConfigFilePath = this.getWebhookConfigManuDir(webHookConfig) + WebHookOperationConstant.FILE_SEPARATOR
-        		+ StringUtils.getFileName(webHookConfig.getCallbackPath())
-                + WebHookOperationConstant.FILE_EXTENSION;
+        		+ StringUtils.getFileName(webHookConfig.getCallbackPath());
         
         assert webhookConfigFilePath != null;
         return new File(webhookConfigFilePath);

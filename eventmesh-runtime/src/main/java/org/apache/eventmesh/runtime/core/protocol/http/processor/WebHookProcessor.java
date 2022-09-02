@@ -48,9 +48,15 @@ public class WebHookProcessor implements HttpProcessor {
             for (Map.Entry<String, String> entry : httpRequest.headers().entries()) {
                 header.put(entry.getKey().toLowerCase(), entry.getValue());
             }
-            byte[] bytes = ((FullHttpRequest) httpRequest).content().array();
-            webHookController.execute(httpRequest.uri(), header, bytes);
-            return HttpResponseUtils.createSuccess();
+            FullHttpRequest fullHttpRequest = ((FullHttpRequest) httpRequest);
+            int length = fullHttpRequest.content().readableBytes();
+            if (length > 0) {
+                byte[] body = new byte[length];
+                fullHttpRequest.content().readBytes(body);
+                webHookController.execute(httpRequest.uri(), header, body);
+                return HttpResponseUtils.createSuccess();
+            }
+            throw new RuntimeException("Body has no data ");
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
