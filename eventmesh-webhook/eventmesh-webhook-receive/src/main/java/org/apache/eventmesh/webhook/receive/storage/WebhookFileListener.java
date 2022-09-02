@@ -115,11 +115,11 @@ public class WebhookFileListener {
             logger.error("cacheInit failed", e);
         }
         WebHookConfig webHookConfig = JsonUtils.deserialize(fileContent.toString(), WebHookConfig.class);
-        cacheWebHookConfig.put(StringUtils.getFileName(webhookConfigFile.getName()), webHookConfig);
+        cacheWebHookConfig.put(webhookConfigFile.getName(), webHookConfig);
     }
     
     public void deleteConfig(File webhookConfigFile) {
-    	cacheWebHookConfig.remove(StringUtils.getFileName(webhookConfigFile.getName()));
+    	cacheWebHookConfig.remove(webhookConfigFile.getName());
     }
 
     /**
