@@ -48,7 +48,7 @@ public class GithubProtocol implements ManufacturerProtocol {
             throw new Exception("webhook-GithubProtocol authenticate failed");
         }
 
-        webHookRequest.setManufacturerEventId(header.get("x-gitHub-delivery"));
+        webHookRequest.setManufacturerEventId(header.get("x-github-delivery"));
         webHookRequest.setManufacturerEventName(webHookConfig.getManufacturerEventName());
         webHookRequest.setManufacturerSource(getManufacturerName());
     }
