@@ -61,7 +61,7 @@ public class WebHookController {
     private ConfigurationWrapper configurationWrapper;
 
     public void init() throws Exception {
-        this.webHookMQProducer = new WebHookMQProducer(
+        this.webHookMQProducer = new WebHookMQProducer(configurationWrapper.getProperties(),
                 configurationWrapper.getProp("eventMesh.webHook.producer.connector"));
         this.hookConfigOperationManage = new HookConfigOperationManage(configurationWrapper);
         this.protocolAdaptor = ProtocolPluginFactory.getProtocolAdaptor("webhookProtocolAdaptor");
