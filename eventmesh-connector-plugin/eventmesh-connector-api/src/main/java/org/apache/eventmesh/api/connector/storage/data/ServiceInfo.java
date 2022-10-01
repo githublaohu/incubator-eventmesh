@@ -14,19 +14,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.apache.eventmesh.api.connector.storage.data;
 
 /**
  * mysql 实例 是没有办法注册的。
  * 消费组订阅topic  大量存在注册中心
- * 	  topic，nameservice  borkername， brokernameip
+ * topic，nameservice  borkername， brokernameip
  * nameservice 不存在持久化
  * borker才有持久化
  * 存储的实例信息，是无法注册
  * 127.0.0.1:3306
+ *
  * @author laohu
- *   serviceInfo mysql地址。会去取元数据，表明，
- *   	表明，直接读取mysql
+ * serviceInfo mysql地址。会去取元数据，表明，
+ * 表明，直接读取mysql
  */
 public class ServiceInfo {
 

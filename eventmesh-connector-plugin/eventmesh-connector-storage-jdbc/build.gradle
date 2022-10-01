@@ -29,6 +29,7 @@ dependencies {
 
 	implementation 'com.alibaba:druid:1.2.11'
 	implementation 'mysql:mysql-connector-java:8.0.30'
+	implementation 'org.yaml:snakeyaml:1.19'
 	
 	
 

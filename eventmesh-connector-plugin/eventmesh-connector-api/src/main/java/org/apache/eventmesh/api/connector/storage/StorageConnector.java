@@ -30,65 +30,52 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.eventmesh.api.connector.storage;
 
-import java.util.List;
-import java.util.Properties;
+package org.apache.eventmesh.api.connector.storage;
 
 import org.apache.eventmesh.api.AbstractContext;
 import org.apache.eventmesh.api.LifeCycle;
 import org.apache.eventmesh.api.RequestReplyCallback;
 import org.apache.eventmesh.api.SendCallback;
-import org.apache.eventmesh.api.connector.storage.data.ConsumerGroupInfo;
 import org.apache.eventmesh.api.connector.storage.data.PullRequest;
-import org.apache.eventmesh.api.connector.storage.data.TopicInfo;
 import org.apache.eventmesh.spi.EventMeshExtensionType;
 import org.apache.eventmesh.spi.EventMeshSPI;
 
+import java.util.List;
+import java.util.Properties;
+
 import io.cloudevents.CloudEvent;
-import io.grpc.Metadata;
+
 
 @EventMeshSPI(isSingleton = false, eventMeshExtensionType = EventMeshExtensionType.CONNECTOR)
-public interface StorageConnector extends LifeCycle{
+public interface StorageConnector extends LifeCycle {
 
-	
-	void init(Properties properties) throws Exception;
-	
+
+    void init(Properties properties) throws Exception;
+
     void publish(CloudEvent cloudEvent, SendCallback sendCallback) throws Exception;
 
     void request(CloudEvent cloudEvent, RequestReplyCallback rrCallback, long timeout) throws Exception;
-	
-    /**
-     * 有数据，无数据
-     * @return
-     */
-	public List<CloudEvent> pull(PullRequest pullRequest);
-	
-	void updateOffset(List<CloudEvent> cloudEvents, AbstractContext context);
-	
-	public Metadata queryMetaData();
-	
-	public int deleteCloudEvent();
-	
-	/**
-	 * 
-	 * 创建表
-	 * @param topicInfo
-	 * @return
-	 */
-	public int createTopic(TopicInfo topicInfo);
-	
-	public int createConsumerGroup(ConsumerGroupInfo consumerGroupInfo);
-	
-	@Override
-	public default boolean isStarted() {
-		return true;
-	}
+    
+    public boolean reply(CloudEvent cloudEvent, SendCallback sendCallback) throws Exception;
 
-	@Override
-	public default boolean isClosed() {
-		return false;
-	}
+    public List<CloudEvent> pull(PullRequest pullRequest)  throws Exception;
 
-	
+    void updateOffset(List<CloudEvent> cloudEvents, AbstractContext context);
+
+    public default int deleteCloudEvent(CloudEvent cloudEvent) {
+    	return 0;
+    }
+
+    @Override
+    public default boolean isStarted() {
+        return true;
+    }
+
+    @Override
+    public default boolean isClosed() {
+        return false;
+    }
+
+
 }

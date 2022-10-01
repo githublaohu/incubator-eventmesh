@@ -14,15 +14,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.apache.eventmesh.api.connector.storage.data;
 
+import lombok.Data;
+
+@Data
 public class ConsumerGroupInfo {
 
-	private String consumerGroupName;
-	
-	private String consumeFromWhere;
-	
-	private String createTime;
-	
-	
+    private Long id;
+
+    private String consumerGroupName;
+
+    private String consumeFromWhere;
+
+    private String createTime;
+
+
 }

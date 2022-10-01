@@ -14,23 +14,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.apache.eventmesh.api.connector.storage.data;
+
+import lombok.Data;
 
 /**
  * {tablename-queue}
- * @author laohu
  *
+ * @author laohu
  */
+@Data
 public class TopicInfo {
 
     private String topicName;
-    
+
     private int writeQueueNums;
-    
+
     private int perm;
-    
+
     private int topicSysFlag = 0;
+
+    private boolean order = false;
     
-    private boolean order = false; 
-    
+    private Long currentId;
+
 }
