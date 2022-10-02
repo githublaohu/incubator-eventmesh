@@ -68,7 +68,7 @@ public class ReplyOperationService {
 			return;
 		}
 		try {
-			List<CloudEventInfo> cloudEventList = replyOperation.queryCloudEvent(replyRequestList);
+			List<CloudEventInfo> cloudEventList = replyOperation.queryReplyCloudEvent(replyRequestList);
 			if (cloudEventList.isEmpty()) {
 				messageLogger.warn("");
 			}

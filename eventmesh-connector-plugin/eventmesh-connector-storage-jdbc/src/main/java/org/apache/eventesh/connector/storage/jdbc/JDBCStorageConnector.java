@@ -5,10 +5,11 @@ import org.apache.eventmesh.api.RequestReplyCallback;
 import org.apache.eventmesh.api.SendCallback;
 import org.apache.eventmesh.api.connector.storage.CloudEventUtils;
 import org.apache.eventmesh.api.connector.storage.StorageConnector;
-import org.apache.eventmesh.api.connector.storage.StorageConnectorInfo;
+import org.apache.eventmesh.api.connector.storage.data.CloudEventInfo;
 import org.apache.eventmesh.api.connector.storage.data.PullRequest;
+import org.apache.eventmesh.api.connector.storage.reply.ReplyOperation;
+import org.apache.eventmesh.api.connector.storage.reply.ReplyRequest;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,7 +19,7 @@ import io.cloudevents.CloudEvent;
  * @author laohu
  *
  */
-public class JDBCStorageConnector extends AbstractJDBCStorageConnectorMetadata implements StorageConnector {
+public class JDBCStorageConnector extends AbstractJDBCStorageConnectorMetadata implements StorageConnector , ReplyOperation {
 
 	private String getTableName(CloudEvent cloudEvent) {
 		return cloudEvent.getType();
@@ -101,5 +102,19 @@ public class JDBCStorageConnector extends AbstractJDBCStorageConnectorMetadata i
 	@Override
 	public void shutdown() {
 		druidDataSource.close();
+	}
+
+	@Override
+	public List<CloudEventInfo> queryReplyCloudEvent(ReplyRequest replyRequest) throws Exception {
+		List<Object> parameter = new ArrayList<>();
+		StringBuffer stringBuffer = new StringBuffer();
+		for(int i = 1 ; i < replyRequest.getIdList().size() ; i++) {
+			stringBuffer.append('?');
+			if(i++ != replyRequest.getIdList().size()) {
+				stringBuffer.append(',');
+			}
+		}
+		String sql = this.cloudEventSQLOperation.selectCloudEventByReplySQL(replyRequest.getTopic(), stringBuffer.toString());
+		return this.query(sql, parameter, ResultSetTransformUtils::transformCloudEvent);
 	}
 }

@@ -6,7 +6,6 @@ import org.apache.eventmesh.api.connector.storage.data.TopicInfo;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.List;
 
 public class ResultSetTransformUtils {
 
@@ -22,7 +21,7 @@ public class ResultSetTransformUtils {
 		return consumerGroupInfo;
 	}
 	
-	public static List<CloudEventInfo> transformCloudEvent(ResultSet resultSet){
+	public static CloudEventInfo transformCloudEvent(ResultSet resultSet){
 		
 		
 		return null;

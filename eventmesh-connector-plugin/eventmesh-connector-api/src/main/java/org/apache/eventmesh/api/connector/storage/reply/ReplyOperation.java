@@ -7,12 +7,12 @@ import java.util.List;
 
 public interface ReplyOperation {
 
-	List<CloudEventInfo>  queryCloudEvent(ReplyRequest replyRequest) throws Exception;
+	List<CloudEventInfo>  queryReplyCloudEvent(ReplyRequest replyRequest) throws Exception;
 	
-	public default List<CloudEventInfo>  queryCloudEvent(List<ReplyRequest> replyRequestList) throws Exception{
+	public default List<CloudEventInfo>  queryReplyCloudEvent(List<ReplyRequest> replyRequestList) throws Exception{
 		List<CloudEventInfo> cloudEventInfoList = new ArrayList<CloudEventInfo>();
 		for(ReplyRequest replyRequest : replyRequestList) {
-			cloudEventInfoList.addAll(this.queryCloudEvent(replyRequest));
+			cloudEventInfoList.addAll(this.queryReplyCloudEvent(replyRequest));
 		}
 		return cloudEventInfoList;
 	}
