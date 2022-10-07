@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-rootProject.name = 'EventMesh'
+rootProject.name = 'incubator-eventmesh'
 String jdkVersion = "${jdk}"
 include 'eventmesh-runtime'
 include 'eventmesh-sdk-java'
@@ -26,15 +26,18 @@ include 'eventmesh-spi'
 include 'eventmesh-connector-plugin:eventmesh-connector-api'
 include 'eventmesh-connector-plugin:eventmesh-connector-rocketmq'
 include 'eventmesh-connector-plugin:eventmesh-connector-standalone'
+include 'eventmesh-connector-plugin:eventmesh-connector-storage-jdbc'
 include 'eventmesh-security-plugin:eventmesh-security-api'
 include 'eventmesh-security-plugin:eventmesh-security-acl'
 include 'eventmesh-registry-plugin:eventmesh-registry-api'
+include 'eventmesh-registry-plugin:eventmesh-registry-nacos'
 include 'eventmesh-admin'
 include 'eventmesh-protocol-plugin'
 include 'eventmesh-protocol-plugin:eventmesh-protocol-api'
 include 'eventmesh-protocol-plugin:eventmesh-protocol-openmessage'
 include 'eventmesh-protocol-plugin:eventmesh-protocol-cloudevents'
 include 'eventmesh-protocol-plugin:eventmesh-protocol-meshmessage'
+include 'eventmesh-protocol-plugin:eventmesh-protocol-http'
 include 'eventmesh-admin:eventmesh-admin-rocketmq'
 include 'eventmesh-protocol-plugin:eventmesh-protocol-grpc'
 include 'eventmesh-protocol-plugin:eventmesh-protocol-grpcmessage'

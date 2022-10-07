@@ -40,6 +40,10 @@ dependencies {
     implementation project(":eventmesh-registry-plugin:eventmesh-registry-api")
     implementation project(":eventmesh-admin:eventmesh-admin-rocketmq")
 
+
+    implementation project(":eventmesh-registry-plugin:eventmesh-registry-nacos")
+
+
     implementation project(":eventmesh-protocol-plugin:eventmesh-protocol-api")
 
     implementation "io.grpc:grpc-protobuf:${grpcVersion}"
@@ -54,6 +58,7 @@ dependencies {
     implementation project(":eventmesh-protocol-plugin:eventmesh-protocol-cloudevents")
     implementation project(":eventmesh-protocol-plugin:eventmesh-protocol-meshmessage")
     implementation project(":eventmesh-protocol-plugin:eventmesh-protocol-openmessage")
+    implementation project(":eventmesh-protocol-plugin:eventmesh-protocol-http")
 
     implementation project(":eventmesh-metrics-plugin:eventmesh-metrics-api")
     implementation project(":eventmesh-metrics-plugin:eventmesh-metrics-prometheus")
@@ -62,6 +67,18 @@ dependencies {
     implementation project(":eventmesh-trace-plugin:eventmesh-trace-zipkin")
 
     testImplementation "org.mockito:mockito-core"
+    testImplementation "org.mockito:mockito-inline"
     testImplementation "org.powermock:powermock-module-junit4"
     testImplementation "org.powermock:powermock-api-mockito2"
+    
+    implementation('org.redisson:redisson:3.17.3') {
+        exclude group: 'io.netty', module: 'netty-common'
+        exclude group: 'io.netty', module: 'netty-buffer'
+        exclude group: 'io.netty', module: 'netty-codec'
+        exclude group: 'io.netty', module: 'netty-transport'
+        exclude group: 'io.netty', module: 'netty-resolver'
+        exclude group: 'io.netty', module: 'netty-resolver-dns'
+        exclude group: 'io.netty', module: 'netty-handler'
+    }
+    
 }
