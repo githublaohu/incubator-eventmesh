@@ -17,6 +17,7 @@
 
 package org.apache.eventmesh.runtime.boot;
 
+import org.apache.eventmesh.common.utils.ConfigurationContextUtil;
 import org.apache.eventmesh.runtime.acl.Acl;
 import org.apache.eventmesh.runtime.common.ServiceState;
 import org.apache.eventmesh.runtime.configuration.EventMeshGrpcConfiguration;
@@ -25,6 +26,7 @@ import org.apache.eventmesh.runtime.configuration.EventMeshTCPConfiguration;
 import org.apache.eventmesh.runtime.connector.ConnectorResource;
 import org.apache.eventmesh.runtime.constants.EventMeshConstants;
 import org.apache.eventmesh.runtime.registry.Registry;
+import org.apache.eventmesh.runtime.trace.Trace;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,25 +45,32 @@ public class EventMeshServer {
 
     private EventMeshHTTPConfiguration eventMeshHttpConfiguration;
 
-    private EventMeshTCPConfiguration eventMeshTCPConfiguration;
+    private EventMeshTCPConfiguration eventMeshTcpConfiguration;
 
     private Acl acl;
 
     private Registry registry;
+
+    private static Trace trace;
 
     private ConnectorResource connectorResource;
 
     private ServiceState serviceState;
 
     public EventMeshServer(EventMeshHTTPConfiguration eventMeshHttpConfiguration,
-                           EventMeshTCPConfiguration eventMeshTCPConfiguration,
+                           EventMeshTCPConfiguration eventMeshTcpConfiguration,
                            EventMeshGrpcConfiguration eventMeshGrpcConfiguration) {
         this.eventMeshHttpConfiguration = eventMeshHttpConfiguration;
-        this.eventMeshTCPConfiguration = eventMeshTCPConfiguration;
+        this.eventMeshTcpConfiguration = eventMeshTcpConfiguration;
         this.eventMeshGrpcConfiguration = eventMeshGrpcConfiguration;
         this.acl = new Acl();
         this.registry = new Registry();
+        this.trace = new Trace(eventMeshHttpConfiguration.eventMeshServerTraceEnable);
         this.connectorResource = new ConnectorResource();
+
+        ConfigurationContextUtil.putIfAbsent(ConfigurationContextUtil.TCP, eventMeshTcpConfiguration);
+        ConfigurationContextUtil.putIfAbsent(ConfigurationContextUtil.GRPC, eventMeshGrpcConfiguration);
+        ConfigurationContextUtil.putIfAbsent(ConfigurationContextUtil.HTTP, eventMeshHttpConfiguration);
     }
 
     public void init() throws Exception {
@@ -69,28 +78,47 @@ public class EventMeshServer {
             acl.init(eventMeshHttpConfiguration.eventMeshSecurityPluginType);
         }
 
-        if (eventMeshTCPConfiguration != null
-                && eventMeshTCPConfiguration.eventMeshTcpServerEnabled
-                && eventMeshTCPConfiguration.eventMeshServerRegistryEnable) {
-            registry.init(eventMeshTCPConfiguration.eventMeshRegistryPluginType);
+        // registry init
+        if (eventMeshTcpConfiguration != null
+            && eventMeshTcpConfiguration.eventMeshTcpServerEnabled
+            && eventMeshTcpConfiguration.eventMeshServerRegistryEnable) {
+            registry.init(eventMeshTcpConfiguration.eventMeshRegistryPluginType);
+        }
+
+        if (eventMeshGrpcConfiguration != null && eventMeshGrpcConfiguration.eventMeshServerRegistryEnable) {
+            registry.init(eventMeshGrpcConfiguration.eventMeshRegistryPluginType);
+        }
+
+        if (eventMeshHttpConfiguration != null && eventMeshHttpConfiguration.eventMeshServerRegistryEnable) {
+            registry.init(eventMeshHttpConfiguration.eventMeshRegistryPluginType);
+        }
+
+        if (eventMeshHttpConfiguration != null && eventMeshHttpConfiguration.eventMeshServerTraceEnable) {
+            trace.init(eventMeshHttpConfiguration.eventMeshTracePluginType);
         }
 
         connectorResource.init(eventMeshHttpConfiguration.eventMeshConnectorPluginType);
 
+        // server init
         if (eventMeshGrpcConfiguration != null) {
-            eventMeshGrpcServer = new EventMeshGrpcServer(eventMeshGrpcConfiguration);
+            eventMeshGrpcServer = new EventMeshGrpcServer(eventMeshGrpcConfiguration, registry);
             eventMeshGrpcServer.init();
         }
 
-        eventMeshHTTPServer = new EventMeshHTTPServer(this, eventMeshHttpConfiguration);
-        eventMeshHTTPServer.init();
-        eventMeshTCPServer = new EventMeshTCPServer(this, eventMeshTCPConfiguration, registry);
-        if (eventMeshTCPConfiguration != null && eventMeshTCPConfiguration.eventMeshTcpServerEnabled) {
-            eventMeshTCPServer.init();
+        if (eventMeshHttpConfiguration != null) {
+            eventMeshHTTPServer = new EventMeshHTTPServer(this, eventMeshHttpConfiguration);
+            eventMeshHTTPServer.init();
+        }
+
+        if (eventMeshTcpConfiguration != null) {
+            eventMeshTCPServer = new EventMeshTCPServer(this, eventMeshTcpConfiguration, registry);
+            if (eventMeshTcpConfiguration.eventMeshTcpServerEnabled) {
+                eventMeshTCPServer.init();
+            }
         }
 
         String eventStore = System
-                .getProperty(EventMeshConstants.EVENT_STORE_PROPERTIES, System.getenv(EventMeshConstants.EVENT_STORE_ENV));
+            .getProperty(EventMeshConstants.EVENT_STORE_PROPERTIES, System.getenv(EventMeshConstants.EVENT_STORE_ENV));
         logger.info("eventStore : {}", eventStore);
 
         serviceState = ServiceState.INITED;
@@ -101,19 +129,27 @@ public class EventMeshServer {
         if (eventMeshHttpConfiguration != null && eventMeshHttpConfiguration.eventMeshServerSecurityEnable) {
             acl.start();
         }
-
-        if (eventMeshTCPConfiguration != null
-                && eventMeshTCPConfiguration.eventMeshTcpServerEnabled
-                && eventMeshTCPConfiguration.eventMeshServerRegistryEnable) {
+        // registry start
+        if (eventMeshTcpConfiguration != null
+            && eventMeshTcpConfiguration.eventMeshTcpServerEnabled
+            && eventMeshTcpConfiguration.eventMeshServerRegistryEnable) {
+            registry.start();
+        }
+        if (eventMeshHttpConfiguration != null && eventMeshHttpConfiguration.eventMeshServerRegistryEnable) {
+            registry.start();
+        }
+        if (eventMeshGrpcConfiguration != null && eventMeshGrpcConfiguration.eventMeshServerRegistryEnable) {
             registry.start();
         }
 
+        // server start
         if (eventMeshGrpcConfiguration != null) {
             eventMeshGrpcServer.start();
         }
-
-        eventMeshHTTPServer.start();
-        if (eventMeshTCPConfiguration != null && eventMeshTCPConfiguration.eventMeshTcpServerEnabled) {
+        if (eventMeshHttpConfiguration != null) {
+            eventMeshHTTPServer.start();
+        }
+        if (eventMeshTcpConfiguration != null && eventMeshTcpConfiguration.eventMeshTcpServerEnabled) {
             eventMeshTCPServer.start();
         }
         serviceState = ServiceState.RUNNING;
@@ -124,11 +160,8 @@ public class EventMeshServer {
         serviceState = ServiceState.STOPING;
         logger.info("server state:{}", serviceState);
         eventMeshHTTPServer.shutdown();
-        if (eventMeshTCPConfiguration != null && eventMeshTCPConfiguration.eventMeshTcpServerEnabled) {
+        if (eventMeshTcpConfiguration != null && eventMeshTcpConfiguration.eventMeshTcpServerEnabled) {
             eventMeshTCPServer.shutdown();
-            if (eventMeshTCPConfiguration.eventMeshServerRegistryEnable) {
-                registry.shutdown();
-            }
         }
 
         connectorResource.release();
@@ -140,6 +173,13 @@ public class EventMeshServer {
         if (eventMeshHttpConfiguration != null && eventMeshHttpConfiguration.eventMeshServerSecurityEnable) {
             acl.shutdown();
         }
+
+        if (eventMeshHttpConfiguration != null && eventMeshHttpConfiguration.eventMeshServerTraceEnable) {
+            trace.shutdown();
+        }
+
+
+        ConfigurationContextUtil.clear();
         serviceState = ServiceState.STOPED;
         logger.info("server state:{}", serviceState);
     }
@@ -156,7 +196,19 @@ public class EventMeshServer {
         return eventMeshTCPServer;
     }
 
+    public static Trace getTrace() {
+        return trace;
+    }
+
     public ServiceState getServiceState() {
         return serviceState;
+    }
+
+    public Registry getRegistry() {
+        return registry;
+    }
+
+    public void setRegistry(Registry registry) {
+        this.registry = registry;
     }
 }
