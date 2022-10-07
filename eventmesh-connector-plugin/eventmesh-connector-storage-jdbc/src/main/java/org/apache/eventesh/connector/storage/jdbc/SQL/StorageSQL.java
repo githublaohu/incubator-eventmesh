@@ -2,57 +2,61 @@ package org.apache.eventesh.connector.storage.jdbc.SQL;
 
 public interface StorageSQL {
 
-	public String insertSQL(String tableName);
+    String insertSQL(String tableName);
 
-	public String selectSQL(String tableName);
+    String selectSQL(String tableName);
 
-	public String selectConsumerGroup();
+    String selectConsumerGroup();
 
-	public String insertConsumerGroup();
+    String insertConsumerGroup();
 
-	public String createDatabaseSQL(String databaseName);
+    String createDatabaseSQL(String databaseName);
 
-	public String topicTableCreateSQL(String table);
+    String topicTableCreateSQL(String table);
 
-	public String consumerGroupTableCreateSQL();
+    String consumerGroupTableCreateSQL();
 
-	public String locationEventSQL(String tableName);
+    String locationEventSQL(String tableName);
 
-	public String queryLocationEventSQL(String tableName);
+    String queryLocationEventSQL(String tableName);
 
-	public String selectFastMessageSQL(String tableName);
+    String selectFirstMessageSQL(String tableName);
 
-	public String selectLastMessageSQL(String tableName);
+    String selectLastMessageSQL(String tableName);
 
-	public String selectNoConsumptionMessageSQL(String tableName, Long consumerGroupId);
+    String selectNoConsumptionMessageSQL(String tableName, Long consumerGroupId);
 
-	public String selectAppointTimeMessageSQL(String tableName, String time);
+    String selectAppointTimeMessageSQL(String tableName, String time);
 
-	public String queryTables();
+    String queryTables();
 
-	public default String replySelectSQL(String table, int num) {
-		StringBuffer sql = new StringBuffer();
-		sql.append("select * from ").append(table).append(" where cloud_event_info_id in(");
-		for (int i = 1; i <= num; i++) {
-			sql.append("?");
-			if (i != num) {
-				sql.append(",");
-			}
-		}
-		sql.append(")");
-		sql.append(" and cloud_event_reply_data is not null");
-		return sql.toString();
-	}
-	
-	public default String replyResult(String table) {
-		StringBuffer sql = new StringBuffer();
-		sql.append(" update ").append( table ).append("  set  cloud_event_reply_data = ? , cloud_event_reply_state = 'NOTHING' where cloud_event_info_id = ?");
-		return sql.toString();
-	}
+    default String replySelectSQL(String table, int num) {
+        StringBuilder sql = new StringBuilder();
+        sql.append("SELECT * FROM ")
+                .append(table)
+                .append(" WHERE cloud_event_info_id IN(");
+        for (int i = 1; i <= num; i++) {
+            sql.append("?");
+            if (i != num) {
+                sql.append(",");
+            }
+        }
+        sql.append(")");
+        sql.append(" AND cloud_event_reply_data IS NOT NULL");
+        return sql.toString();
+    }
 
-	public default String updateOffsetSQL(String table) {
-		StringBuffer sql = new StringBuffer();
-		sql.append("update ").append(table).append(" set cloud_event_state = 'SUCCESS'  where cloud_event_info_id = ?");
-		return sql.toString();
-	}
+    default String replyResult(String table) {
+        StringBuffer sql = new StringBuffer();
+        sql.append("UPDATE ").append(table)
+                .append(" SET cloud_event_reply_data = ?, cloud_event_reply_state = 'NOTHING' WHERE cloud_event_info_id = ?");
+        return sql.toString();
+    }
+
+    default String updateOffsetSQL(String table) {
+        StringBuffer sql = new StringBuffer();
+        sql.append("UPDATE ").append(table)
+                .append(" SET cloud_event_state = 'SUCCESS' WHERE cloud_event_info_id = ?");
+        return sql.toString();
+    }
 }
