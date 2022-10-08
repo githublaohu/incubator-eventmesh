@@ -17,6 +17,8 @@
 
 package org.apache.eventmesh.runtime.boot;
 
+import org.apache.eventmesh.common.config.ConfigInfo;
+import org.apache.eventmesh.common.config.ConfigService;
 import org.apache.eventmesh.common.config.ConfigurationWrapper;
 import org.apache.eventmesh.runtime.configuration.EventMeshGrpcConfiguration;
 import org.apache.eventmesh.runtime.configuration.EventMeshHTTPConfiguration;
@@ -38,6 +40,13 @@ public class EventMeshStartup {
                     new ConfigurationWrapper(EventMeshConstants.EVENTMESH_CONF_HOME
                             + File.separator
                             + EventMeshConstants.EVENTMESH_CONF_FILE, false);
+            ConfigService configService = ConfigService.getInstance();
+            configService.setConfigPath(EventMeshConstants.EVENTMESH_CONF_HOME+ File.separator);
+            configService.getRootConfig(EventMeshConstants.EVENTMESH_CONF_FILE);
+            ConfigInfo config = new ConfigInfo();
+            config.setHump(ConfigInfo.HUPM_SPOT);
+            config.setClazz(EventMeshHTTPConfiguration.class);
+            configService.getConfig(config);
             EventMeshHTTPConfiguration eventMeshHttpConfiguration = new EventMeshHTTPConfiguration(configurationWrapper);
             eventMeshHttpConfiguration.init();
             EventMeshTCPConfiguration eventMeshTCPConfiguration = new EventMeshTCPConfiguration(configurationWrapper);
