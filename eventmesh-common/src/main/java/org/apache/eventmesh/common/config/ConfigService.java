@@ -36,7 +36,8 @@ public class ConfigService {
 	public void getConfig(Object object, Class<?> clazz) throws Exception {
 		Config[] configArray = clazz.getAnnotationsByType(Config.class);
 		if (configArray == null || configArray.length == 0) {
-
+			//TODO
+			return;
 		}
 		for (Config config : configArray) {
 			ConfigInfo configInfo = new ConfigInfo();

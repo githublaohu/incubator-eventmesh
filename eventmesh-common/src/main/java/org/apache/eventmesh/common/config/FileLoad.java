@@ -4,11 +4,10 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.lang.reflect.Field;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Properties;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 public interface FileLoad {
 
@@ -56,6 +55,7 @@ public interface FileLoad {
 		public <T> T getConfig(Properties properties, ConfigInfo configInfo) throws Exception {
 			this.init(configInfo);
 			Properties newProperties = new Properties();
+			Object instance = configInfo.getClazz().newInstance();
 			for (Entry<Object, Object> entry : properties.entrySet()) {
 				String key = (String) entry.getKey();
 				String newKey = null;
@@ -78,9 +78,45 @@ public interface FileLoad {
 					key = newKey;
 				}
 				newProperties.put(newKey, entry.getValue());
+				Field field = null;
+				try {
+					field = configInfo.getClazz().getDeclaredField(newKey);
+				}finally {
+					if(Objects.isNull(field)) {
+						continue;
+					}
+				}
+				
+				Class<?> clazz = field.getType();
+				Object object = null;
+				String value = entry.getValue().toString();
+				if(int.class.equals(clazz) || Integer.class.equals(clazz)) {
+					object = Integer.valueOf(value);
+				}else if(long.class.equals(clazz) || Long.class.equals(clazz)) {
+					object = Long.valueOf(value);
+				}else if(byte.class.equals(clazz) || Byte.class.equals(clazz)) {
+					object = Byte.valueOf(value);
+				}else if(short.class.equals(clazz) || Short.class.equals(clazz)) {
+					object = Short.valueOf(value);
+				}else if(boolean.class.equals(clazz) || Boolean.class.equals(clazz)) {
+					object = Boolean.valueOf(value);
+				}else if(char.class.equals(clazz) || Character.class.equals(clazz)) {
+					object = value.charAt(0);
+				}else if(double.class.equals(clazz) || Double.class.equals(clazz)) {
+					object = Double.valueOf(value);
+				}else if(float.class.equals(clazz) || Float.class.equals(clazz)) {
+					object = Float.valueOf(value);
+				}else if(Object.class.equals(clazz)) {
+					object = value;
+				}else if(String.class.equals(clazz)){
+					object = value;
+				}else {
+					// time type
+				}
+				
+				field.set(instance, object);
 			}
-			ObjectMapper objectMapper = new ObjectMapper();
-			return (T) objectMapper.convertValue(newProperties, configInfo.getClazz());
+			return (T) instance;
 		}
 
 		
