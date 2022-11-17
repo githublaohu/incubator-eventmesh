@@ -17,6 +17,8 @@
 
 package org.apache.eventmesh.runtime.boot;
 
+
+import org.apache.eventmesh.common.config.ConfigService;
 import org.apache.eventmesh.runtime.acl.Acl;
 import org.apache.eventmesh.runtime.common.ServiceState;
 import org.apache.eventmesh.runtime.configuration.EventMeshGrpcConfiguration;
@@ -53,12 +55,11 @@ public class EventMeshServer {
 
     private ServiceState serviceState;
 
-    public EventMeshServer(EventMeshHTTPConfiguration eventMeshHttpConfiguration,
-                           EventMeshTCPConfiguration eventMeshTCPConfiguration,
-                           EventMeshGrpcConfiguration eventMeshGrpcConfiguration) {
-        this.eventMeshHttpConfiguration = eventMeshHttpConfiguration;
-        this.eventMeshTCPConfiguration = eventMeshTCPConfiguration;
-        this.eventMeshGrpcConfiguration = eventMeshGrpcConfiguration;
+    public EventMeshServer() {
+    	ConfigService configService = ConfigService.getInstance();
+        this.eventMeshHttpConfiguration = configService.getConfig(EventMeshHTTPConfiguration.class);
+        this.eventMeshTCPConfiguration = configService.getConfig(EventMeshTCPConfiguration.class);
+        this.eventMeshGrpcConfiguration = configService.getConfig(EventMeshGrpcConfiguration.class);
         this.acl = new Acl();
         this.registry = new Registry();
         this.connectorResource = new ConnectorResource();

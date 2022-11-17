@@ -23,14 +23,16 @@ public class ConfigService {
 	
 	public ConfigService() {}
 
-	public void setConfigPath(String configPath) {
+	public ConfigService setConfigPath(String configPath) {
 		this.configPath = configPath;
+		return this;
 	}
 	
-	public void getRootConfig(String path) throws Exception {
+	public ConfigService setRootConfig(String path) throws Exception {
 		ConfigInfo configInfo = new ConfigInfo();
 		configInfo.setPath(path);
 		properties = this.getConfig(configInfo);
+		return this;
 	}
 
 	public void getConfig(Object object, Class<?> clazz) throws Exception {
@@ -48,6 +50,7 @@ public class ConfigService {
 			Field field = clazz.getDeclaredField(configInfo.getField());
 			configInfo.setClazz(field.getType());
 			Object configObject = this.getConfig(configInfo);
+			field.setAccessible(true);
 			field.set(object, configObject);
 		}
 
@@ -56,6 +59,14 @@ public class ConfigService {
 	public void getConfig(Object object) throws Exception {
 		this.getConfig(object, object.getClass());
 	}
+	
+	public <T> T getConfig(Class<?> clazz) {
+		try {
+			return this.getConfig(ConfigInfo.builder().clazz(clazz).hump(ConfigInfo.HUPM_SPOT).build());
+		}catch(Exception e) {
+			throw new RuntimeException(e);
+		}
+	} 
 
 	@SuppressWarnings("unchecked")
 	public <T> T getConfig(ConfigInfo configInfo) throws Exception {

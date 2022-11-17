@@ -39,6 +39,12 @@ public class ClientConfiguration {
     public String clusterName = "";
     public String accessKey = "";
     public String secretKey = "";
+    
+    private Client client;
+    
+    public static class Client{
+    	
+    }
 
     public void init() {
 

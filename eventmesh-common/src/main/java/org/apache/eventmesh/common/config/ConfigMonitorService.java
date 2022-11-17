@@ -47,7 +47,7 @@ public class ConfigMonitorService {
 					WatchKey key = ConfigMonitorService.this.service.take();
 					for (WatchEvent<?> event : key.pollEvents()) {
 						ConfigInfo configInfo = ConfigMonitorService.this.watchKeyPathMap.get(key);
-
+						
 					}
 				} catch (InterruptedException e) {
 					log.error("Interrupted", e);
