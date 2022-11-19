@@ -44,14 +44,22 @@ public class ConfigService {
 		for (Config config : configArray) {
 			ConfigInfo configInfo = new ConfigInfo();
 			configInfo.setField(config.field());
-			configInfo.setPath(configInfo.getPath());
-			configInfo.setPrefix(configInfo.getPrefix());
+			configInfo.setPath(config.path());
+			configInfo.setPrefix(config.prefix());
+			configInfo.setHump(config.hump());
 			configInfo.setObject(object);
+			configInfo.setMonitor(config.monitor());
 			Field field = clazz.getDeclaredField(configInfo.getField());
 			configInfo.setClazz(field.getType());
 			Object configObject = this.getConfig(configInfo);
 			field.setAccessible(true);
 			field.set(object, configObject);
+			if (configInfo.isMonitor()) {
+				configInfo.setObjectField(field);
+				configInfo.setInstance(object);
+				configInfo.setObject(configObject);
+				configMonitorService.monitor(configInfo);
+			}
 		}
 
 	}
@@ -76,8 +84,8 @@ public class ConfigService {
 		} else {
 			String path = configInfo.getPath();
 			String filePath;
-			if (path.startsWith("classPath://")) {
-				filePath = path.substring(12);
+			if (path.startsWith("classPath://")) {				
+				filePath = ConfigService.class.getResource("/"+path.substring(12)).getPath();
 			} else if (path.startsWith("file://")) {
 				filePath = path.substring(7);
 			} else {
@@ -90,9 +98,6 @@ public class ConfigService {
 			String suffix = path.substring(path.lastIndexOf('.')+1);
 			configInfo.setFilePath(filePath);
 			object = FileLoad.getFileLoad(suffix).getConfig(configInfo);
-		}
-		if (configInfo.isMonitor()) {
-			configMonitorService.monitor(configInfo);
 		}
 		return (T) object;
 	}

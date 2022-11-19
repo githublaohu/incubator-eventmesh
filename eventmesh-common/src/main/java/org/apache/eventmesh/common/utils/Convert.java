@@ -79,6 +79,10 @@ public class Convert {
 	
 	public interface ConvertValue<T>{
 		
+		public default boolean isNotHandleNullValue() {
+			return true;
+		}
+		
 		public T convert(ConvertInfo convertInfo );
 	}
 	
@@ -157,7 +161,7 @@ public class Convert {
 					convertInfo.setConfigInfo(this.convertInfo.getConfigInfo());
 				}else {
 					String value = convertInfo.getProperties().getProperty(key);
-					if(Objects.isNull(value)) {
+					if(Objects.isNull(value) && convertValue.isNotHandleNullValue()) {
 						NotNull notNull = field.getAnnotation(NotNull.class);
 						if(Objects.nonNull(notNull)) {
 							Preconditions.checkState(true, key + " is invalidated");
@@ -335,6 +339,10 @@ public class Convert {
 	
 	private class ConvertList implements ConvertValue<List<Object>>{
 
+		public boolean isNotHandleNullValue() {
+			return false;
+		}
+		
 		@SuppressWarnings("unchecked")
 		@Override
 		public List<Object> convert(ConvertInfo convertInfo) {
@@ -368,6 +376,10 @@ public class Convert {
 	
 	private class ConvertMap implements ConvertValue<Map<String,Object>>{
 
+		public boolean isNotHandleNullValue() {
+			return false;
+		}
+		
 		@SuppressWarnings("unchecked")
 		@Override
 		public Map<String,Object> convert(ConvertInfo convertInfo) {

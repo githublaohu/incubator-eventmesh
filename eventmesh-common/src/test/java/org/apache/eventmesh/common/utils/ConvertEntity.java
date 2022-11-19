@@ -7,8 +7,10 @@ import java.util.List;
 import java.util.Map;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
+@EqualsAndHashCode(callSuper = true)
 public class ConvertEntity extends ConvertSuperEntity{
 
 	private int intValue;
@@ -40,4 +42,6 @@ public class ConvertEntity extends ConvertSuperEntity{
 	private LocalDateTime localDataTimeValue;
 	
 	//private ConvertEntity converEntiy;
+	
+	
 }

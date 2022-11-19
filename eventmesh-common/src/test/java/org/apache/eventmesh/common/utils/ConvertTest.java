@@ -1,6 +1,7 @@
 package org.apache.eventmesh.common.utils;
 
 import org.apache.eventmesh.common.config.ConfigInfo;
+import org.apache.eventmesh.common.config.ConfigService;
 
 import java.util.Properties;
 
@@ -35,5 +36,12 @@ public class ConvertTest {
 		properties.put("local_data_value", "2022-12-12");
 		properties.put("local_data_time_value", "2022-12-12 11:11:11");
 		convert.createObject(configInfo, properties);
+	}
+	
+	@Test
+	public void anTest() throws Exception {
+		ConfigManage config = new ConfigManage();
+		ConfigService.getInstance()
+		.getConfig(config);
 	}
 }

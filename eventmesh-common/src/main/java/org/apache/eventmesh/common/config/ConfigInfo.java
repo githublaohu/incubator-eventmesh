@@ -1,5 +1,7 @@
 package org.apache.eventmesh.common.config;
 
+import java.lang.reflect.Field;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -32,4 +34,25 @@ public class ConfigInfo {
 	private boolean monitor;
 	
 	private String hump;
+	
+	Field objectField;
+	
+	Object instance;
+	
+	protected void  setObjectField(Field objectField) {
+		this.objectField = objectField;
+	}
+	
+	protected Field getObjectField() {
+		return this.objectField;
+	}
+	
+	protected void  setInstance(Object instance) {
+		this.instance = instance;
+	}
+	
+	protected Object getInstance() {
+		return this.instance;
+	}
+	
 }

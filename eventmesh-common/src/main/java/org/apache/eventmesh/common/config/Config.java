@@ -15,6 +15,8 @@ public @interface Config {
 	
 	String prefix();
 	
+	String hump() default ".";
+	
 	boolean removePrefix() default true;
 	
 	boolean monitor() default false;
