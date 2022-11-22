@@ -1,6 +1,5 @@
 package org.apache.eventmesh.common.utils;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.eventmesh.common.config.ConfigInfo;
 import org.apache.eventmesh.common.config.NotNull;
 
@@ -21,13 +20,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-
-import com.google.common.base.Preconditions;
-
 import java.util.Objects;
 import java.util.Properties;
 import java.util.TreeMap;
 import java.util.Vector;
+
+import com.google.common.base.Preconditions;
 
 import lombok.Data;
 
@@ -367,7 +365,7 @@ public class Convert {
 						list.add(convert.convert(convertInfo));
 					}
 				}
-				return list;
+				return list.isEmpty()? null : list;
 			} catch (Exception e) {
 				throw new RuntimeException(e);
 			}	
@@ -404,7 +402,7 @@ public class Convert {
 						map.put(propertiesKey.replace(key, "") ,convert.convert(convertInfo));
 					}
 				}
-				return map;
+				return map.isEmpty() ? null : map;
 			} catch (Exception e) {
 				throw new RuntimeException(e);
 			}	

@@ -4,7 +4,6 @@ import org.apache.eventmesh.common.ThreadPoolFactory;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
