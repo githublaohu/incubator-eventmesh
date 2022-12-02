@@ -19,6 +19,7 @@ package org.apache.eventmesh.runtime.configuration;
 
 import org.apache.eventmesh.common.config.CommonConfiguration;
 import org.apache.eventmesh.common.config.ConfigurationWrapper;
+import org.apache.eventmesh.common.config.NotNull;
 
 public class EventMeshTCPConfiguration extends CommonConfiguration {
     public int eventMeshTcpServerPort = 10000;
@@ -78,11 +79,16 @@ public class EventMeshTCPConfiguration extends CommonConfiguration {
 
     public int eventMeshEventSize = 1000;
 
+    @NotNull
     public int eventMeshEventBatchSize = 10;
 
     private TrafficShapingConfig gtc = new TrafficShapingConfig(0, 10_000, 1_000, 2000);
     private TrafficShapingConfig ctc = new TrafficShapingConfig(0, 2_000, 1_000, 10_000);
 
+    public EventMeshTCPConfiguration() {
+    	super(null);
+    }
+    
     public EventMeshTCPConfiguration(ConfigurationWrapper configurationWrapper) {
         super(configurationWrapper);
     }

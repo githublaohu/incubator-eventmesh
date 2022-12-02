@@ -17,10 +17,7 @@
 
 package org.apache.eventmesh.runtime.boot;
 
-import org.apache.eventmesh.common.config.ConfigurationWrapper;
-import org.apache.eventmesh.runtime.configuration.EventMeshGrpcConfiguration;
-import org.apache.eventmesh.runtime.configuration.EventMeshHTTPConfiguration;
-import org.apache.eventmesh.runtime.configuration.EventMeshTCPConfiguration;
+import org.apache.eventmesh.common.config.ConfigService;
 import org.apache.eventmesh.runtime.constants.EventMeshConstants;
 
 import java.io.File;
@@ -34,17 +31,8 @@ public class EventMeshStartup {
 
     public static void main(String[] args) throws Exception {
         try {
-            ConfigurationWrapper configurationWrapper =
-                    new ConfigurationWrapper(EventMeshConstants.EVENTMESH_CONF_HOME
-                            + File.separator
-                            + EventMeshConstants.EVENTMESH_CONF_FILE, false);
-            EventMeshHTTPConfiguration eventMeshHttpConfiguration = new EventMeshHTTPConfiguration(configurationWrapper);
-            eventMeshHttpConfiguration.init();
-            EventMeshTCPConfiguration eventMeshTCPConfiguration = new EventMeshTCPConfiguration(configurationWrapper);
-            eventMeshTCPConfiguration.init();
-            EventMeshGrpcConfiguration eventMeshGrpcConfiguration = new EventMeshGrpcConfiguration(configurationWrapper);
-            eventMeshGrpcConfiguration.init();
-            EventMeshServer server = new EventMeshServer(eventMeshHttpConfiguration, eventMeshTCPConfiguration, eventMeshGrpcConfiguration);
+            ConfigService.getInstance().setConfigPath(EventMeshConstants.EVENTMESH_CONF_HOME+ File.separator).setRootConfig(EventMeshConstants.EVENTMESH_CONF_FILE);
+            EventMeshServer server = new EventMeshServer();
             server.init();
             server.start();
             Runtime.getRuntime().addShutdownHook(new Thread(() -> {

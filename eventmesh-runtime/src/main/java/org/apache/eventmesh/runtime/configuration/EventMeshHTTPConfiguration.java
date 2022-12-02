@@ -90,6 +90,10 @@ public class EventMeshHTTPConfiguration extends CommonConfiguration {
     public List<IPAddress> eventMeshIpv4BlackList = Collections.emptyList();
 
     public List<IPAddress> eventMeshIpv6BlackList = Collections.emptyList();
+    
+    public EventMeshHTTPConfiguration() {
+    	super(null);
+    }
 
     public EventMeshHTTPConfiguration(ConfigurationWrapper configurationWrapper) {
         super(configurationWrapper);

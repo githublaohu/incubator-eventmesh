@@ -75,6 +75,10 @@ public class EventMeshGrpcConfiguration extends CommonConfiguration {
 
     public String eventMeshIp = IPUtils.getLocalAddress();
 
+    public EventMeshGrpcConfiguration() {
+    	super(null);
+    }
+    
     public EventMeshGrpcConfiguration(ConfigurationWrapper configurationWrapper) {
         super(configurationWrapper);
     }

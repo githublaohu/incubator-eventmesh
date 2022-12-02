@@ -17,6 +17,7 @@
 
 package org.apache.eventmesh.spi;
 
+import org.apache.eventmesh.common.config.ConfigService;
 import org.apache.eventmesh.spi.loader.ExtensionClassLoader;
 import org.apache.eventmesh.spi.loader.JarExtensionClassLoader;
 import org.apache.eventmesh.spi.loader.MetaInfExtensionClassLoader;
@@ -84,8 +85,9 @@ public enum EventMeshExtensionFactory {
                 T extensionInstance = extensionInstanceClass.newInstance();
                 logger.info("initialize extension instance success, extensionType: {}, extensionInstanceName: {}",
                         extensionType, extensionInstanceName);
+                ConfigService.getInstance().getConfig(extensionInstance);
                 return extensionInstance;
-            } catch (InstantiationException | IllegalAccessException e) {
+            } catch (Exception e) {
                 throw new ExtensionException("Extension initialize error", e);
             }
         });
@@ -100,8 +102,9 @@ public enum EventMeshExtensionFactory {
             T extensionInstance = extensionInstanceClass.newInstance();
             logger.info("initialize extension instance success, extensionType: {}, extensionName: {}",
                     extensionType, extensionInstanceName);
+            ConfigService.getInstance().getConfig(extensionInstance);
             return extensionInstance;
-        } catch (InstantiationException | IllegalAccessException e) {
+        } catch (Exception e) {
             throw new ExtensionException("Extension initialize error", e);
         }
     }
