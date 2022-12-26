@@ -301,6 +301,7 @@ public abstract class AbstractHTTPServer extends AbstractRemotingServer {
 
         @Override
         protected void channelRead0(ChannelHandlerContext ctx, HttpRequest httpRequest) {
+        	
             Context context = null;
             Span span = null;
             if (useTrace) {

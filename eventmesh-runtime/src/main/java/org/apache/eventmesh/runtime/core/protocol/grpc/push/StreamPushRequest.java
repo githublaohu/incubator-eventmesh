@@ -101,27 +101,15 @@ public class StreamPushRequest extends AbstractPushRequest {
     private List<EventEmitter<SimpleMessage>> selectEmitter() {
         List<EventEmitter<SimpleMessage>> emitterList = MapUtils.getObject(idcEmitters,
             eventMeshGrpcConfiguration.eventMeshIDC, null);
+        emitterList = CollectionUtils.isNotEmpty(emitterList)?emitterList:totalEmitters;
         if (CollectionUtils.isNotEmpty(emitterList)) {
             if (subscriptionMode.equals(SubscriptionMode.CLUSTERING)) {
                 return Collections.singletonList(emitterList.get((startIdx + retryTimes) % emitterList.size()));
             } else if (subscriptionMode.equals(SubscriptionMode.BROADCASTING)) {
                 return emitterList;
-            } else {
-                messageLogger.error("Invalid Subscription Mode, no message returning back to subscriber.");
-                return Collections.emptyList();
-            }
+            } 
         }
-        if (CollectionUtils.isNotEmpty(totalEmitters)) {
-            if (subscriptionMode.equals(SubscriptionMode.CLUSTERING)) {
-                return Collections.singletonList(totalEmitters.get((startIdx + retryTimes) % totalEmitters.size()));
-            } else if (subscriptionMode.equals(SubscriptionMode.BROADCASTING)) {
-                return totalEmitters;
-            } else {
-                messageLogger.error("Invalid Subscription Mode, no message returning back to subscriber.");
-                return Collections.emptyList();
-            }
-        }
-        messageLogger.error("No event emitters from subscriber, no message returning.");
         return Collections.emptyList();
-    }
+   }
+        
 }

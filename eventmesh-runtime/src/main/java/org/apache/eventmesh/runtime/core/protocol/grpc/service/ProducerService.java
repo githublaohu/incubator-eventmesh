@@ -24,6 +24,7 @@ import org.apache.eventmesh.common.protocol.grpc.protos.Response;
 import org.apache.eventmesh.common.protocol.grpc.protos.SimpleMessage;
 import org.apache.eventmesh.runtime.boot.EventMeshGrpcServer;
 import org.apache.eventmesh.runtime.constants.EventMeshConstants;
+import org.apache.eventmesh.runtime.core.protocol.context.GrpcRpcContext;
 import org.apache.eventmesh.runtime.core.protocol.grpc.processor.BatchPublishMessageProcessor;
 import org.apache.eventmesh.runtime.core.protocol.grpc.processor.RequestMessageProcessor;
 import org.apache.eventmesh.runtime.core.protocol.grpc.processor.SendAsyncMessageProcessor;
@@ -56,6 +57,9 @@ public class ProducerService extends PublisherServiceGrpc.PublisherServiceImplBa
             EventMeshConstants.PROTOCOL_GRPC, request.getHeader().getIp(),
             eventMeshGrpcServer.getEventMeshGrpcConfiguration().eventMeshIp);
 
+        GrpcRpcContext rpcContext = new GrpcRpcContext();
+        
+        
         EventEmitter<Response> emitter = new EventEmitter<>(responseObserver);
         threadPoolExecutor.submit(() -> {
             SendAsyncMessageProcessor sendAsyncMessageProcessor = new SendAsyncMessageProcessor(eventMeshGrpcServer);

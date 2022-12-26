@@ -22,6 +22,8 @@ public class ProtocolKey {
     public static final String REQUEST_CODE = "code";
     public static final String LANGUAGE = "language";
     public static final String VERSION = "version";
+    
+    public static final String PROTOCOL_NEW_VERSION = "new";
 
     public static final String PROTOCOL_TYPE = "protocoltype";
 

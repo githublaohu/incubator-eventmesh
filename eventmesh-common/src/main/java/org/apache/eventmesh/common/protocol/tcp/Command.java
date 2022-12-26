@@ -17,8 +17,12 @@
 
 package org.apache.eventmesh.common.protocol.tcp;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public enum Command {
 
+	
     //heartbeat
     HEARTBEAT_REQUEST(0),                              //client send heartbeat packet to server
     HEARTBEAT_RESPONSE(1),                             //server response heartbeat packet of client
@@ -84,8 +88,11 @@ public enum Command {
     RECOMMEND_REQUEST(35),                              //Client sends recommendation request to server
     RECOMMEND_RESPONSE(36);                             //The server will recommend the results to the client
 
+	
+	
     private final byte value;
 
+    
     Command(int value) {
         this.value = (byte) value;
     }

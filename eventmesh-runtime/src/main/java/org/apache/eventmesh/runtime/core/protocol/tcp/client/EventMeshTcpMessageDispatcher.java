@@ -23,6 +23,8 @@ import org.apache.eventmesh.common.protocol.tcp.Header;
 import org.apache.eventmesh.common.protocol.tcp.OPStatus;
 import org.apache.eventmesh.common.protocol.tcp.Package;
 import org.apache.eventmesh.runtime.boot.EventMeshTCPServer;
+import org.apache.eventmesh.runtime.core.protocol.api.RpcContext;
+import org.apache.eventmesh.runtime.core.protocol.context.TcpRpcContext;
 import org.apache.eventmesh.runtime.core.protocol.tcp.client.session.SessionState;
 import org.apache.eventmesh.runtime.core.protocol.tcp.client.task.GoodbyeTask;
 import org.apache.eventmesh.runtime.core.protocol.tcp.client.task.HeartBeatTask;
@@ -155,6 +157,9 @@ public class EventMeshTcpMessageDispatcher extends SimpleChannelInboundHandler<P
 
     private void dispatch(ChannelHandlerContext ctx, Package pkg, long startTime, Command cmd) throws
             Exception {
+    	TcpRpcContext conntext = new TcpRpcContext();
+    	conntext.setPkg(pkg);
+    	
         Runnable task;
         switch (cmd) {
             case HEARTBEAT_REQUEST:
