@@ -15,26 +15,30 @@
  * limitations under the License.
  */
 
-dependencies {
-    api project(":eventmesh-spi")
-    implementation project(":eventmesh-common")
-    api 'io.cloudevents:cloudevents-core'
-    api 'io.dropwizard.metrics:metrics-core'
-    api "io.dropwizard.metrics:metrics-healthchecks"
-    api "io.dropwizard.metrics:metrics-annotation"
-    api "io.dropwizard.metrics:metrics-json"
+package org.apache.eventmesh.api.connector.storage.data;
+
+import lombok.Data;
+
+/**
+ * {tablename-queue}
+ *
+ * @author laohu
+ */
+@Data
+public class TopicInfo {
+
+    private String topicName;
     
-    implementation 'io.cloudevents:cloudevents-json-jackson:2.4.0'
+    private String dbTablesName;
 
-    compileOnly 'org.projectlombok:lombok'
-    annotationProcessor 'org.projectlombok:lombok'
+    private int writeQueueNums;
 
+    private int perm;
 
-	implementation "org.mockito:mockito-core"
-    implementation "org.powermock:powermock-module-junit4"
-    implementation "org.powermock:powermock-api-mockito2"
-	
-    testCompileOnly 'org.projectlombok:lombok:1.18.22'
-    testAnnotationProcessor 'org.projectlombok:lombok:1.18.22'
+    private int topicSysFlag = 0;
+
+    private boolean order = false;
+
+    private Long currentId;
 
 }

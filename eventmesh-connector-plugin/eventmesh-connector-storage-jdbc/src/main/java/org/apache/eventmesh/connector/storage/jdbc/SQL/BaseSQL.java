@@ -15,26 +15,18 @@
  * limitations under the License.
  */
 
-dependencies {
-    api project(":eventmesh-spi")
-    implementation project(":eventmesh-common")
-    api 'io.cloudevents:cloudevents-core'
-    api 'io.dropwizard.metrics:metrics-core'
-    api "io.dropwizard.metrics:metrics-healthchecks"
-    api "io.dropwizard.metrics:metrics-annotation"
-    api "io.dropwizard.metrics:metrics-json"
+package org.apache.eventmesh.connector.storage.jdbc.SQL;
+
+import lombok.Data;
+
+@Data
+public class BaseSQL {
+
+    private String createDatabases;
     
-    implementation 'io.cloudevents:cloudevents-json-jackson:2.4.0'
+    private String queryDataBases;
 
-    compileOnly 'org.projectlombok:lombok'
-    annotationProcessor 'org.projectlombok:lombok'
+    private String queryConsumerGroupTableSQL;
 
-
-	implementation "org.mockito:mockito-core"
-    implementation "org.powermock:powermock-module-junit4"
-    implementation "org.powermock:powermock-api-mockito2"
-	
-    testCompileOnly 'org.projectlombok:lombok:1.18.22'
-    testAnnotationProcessor 'org.projectlombok:lombok:1.18.22'
-
+    private String queryCloudEventTablesSQL;
 }

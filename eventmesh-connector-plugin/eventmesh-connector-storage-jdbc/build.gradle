@@ -15,26 +15,35 @@
  * limitations under the License.
  */
 
+configurations {
+    implementation.exclude group: 'ch.qos.logback', module: 'logback-classic'
+    implementation.exclude group: 'log4j', module: 'log4j'
+}
+
+
+
 dependencies {
-    api project(":eventmesh-spi")
     implementation project(":eventmesh-common")
-    api 'io.cloudevents:cloudevents-core'
-    api 'io.dropwizard.metrics:metrics-core'
-    api "io.dropwizard.metrics:metrics-healthchecks"
-    api "io.dropwizard.metrics:metrics-annotation"
-    api "io.dropwizard.metrics:metrics-json"
-    
-    implementation 'io.cloudevents:cloudevents-json-jackson:2.4.0'
-
-    compileOnly 'org.projectlombok:lombok'
-    annotationProcessor 'org.projectlombok:lombok'
+    implementation project(":eventmesh-connector-plugin:eventmesh-connector-api")
 
 
-	implementation "org.mockito:mockito-core"
-    implementation "org.powermock:powermock-module-junit4"
-    implementation "org.powermock:powermock-api-mockito2"
+	implementation 'com.alibaba:druid:1.2.11'
+	implementation 'mysql:mysql-connector-java:8.0.30'
+	implementation 'org.yaml:snakeyaml:1.19'
 	
+	
+
+    testImplementation project(":eventmesh-connector-plugin:eventmesh-connector-api")
+    testImplementation project(":eventmesh-common")
+
+    testImplementation "org.mockito:mockito-core"
+    testImplementation "org.powermock:powermock-module-junit4"
+    testImplementation "org.powermock:powermock-api-mockito2"
+
+
+    compileOnly 'org.projectlombok:lombok:1.18.22'
+    annotationProcessor 'org.projectlombok:lombok:1.18.22'
+
     testCompileOnly 'org.projectlombok:lombok:1.18.22'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.22'
-
 }

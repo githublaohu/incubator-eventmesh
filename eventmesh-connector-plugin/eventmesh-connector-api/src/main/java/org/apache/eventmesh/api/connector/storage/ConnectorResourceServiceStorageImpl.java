@@ -14,27 +14,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package org.apache.eventmesh.api.connector.storage;
 
-dependencies {
-    api project(":eventmesh-spi")
-    implementation project(":eventmesh-common")
-    api 'io.cloudevents:cloudevents-core'
-    api 'io.dropwizard.metrics:metrics-core'
-    api "io.dropwizard.metrics:metrics-healthchecks"
-    api "io.dropwizard.metrics:metrics-annotation"
-    api "io.dropwizard.metrics:metrics-json"
-    
-    implementation 'io.cloudevents:cloudevents-json-jackson:2.4.0'
+import org.apache.eventmesh.api.connector.ConnectorResourceService;
 
-    compileOnly 'org.projectlombok:lombok'
-    annotationProcessor 'org.projectlombok:lombok'
+public class ConnectorResourceServiceStorageImpl implements ConnectorResourceService{
 
+	@Override
+	public void init() throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
 
-	implementation "org.mockito:mockito-core"
-    implementation "org.powermock:powermock-module-junit4"
-    implementation "org.powermock:powermock-api-mockito2"
-	
-    testCompileOnly 'org.projectlombok:lombok:1.18.22'
-    testAnnotationProcessor 'org.projectlombok:lombok:1.18.22'
+	@Override
+	public void release() throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
 
 }

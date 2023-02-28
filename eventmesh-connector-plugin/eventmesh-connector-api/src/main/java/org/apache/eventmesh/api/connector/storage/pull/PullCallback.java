@@ -15,26 +15,17 @@
  * limitations under the License.
  */
 
-dependencies {
-    api project(":eventmesh-spi")
-    implementation project(":eventmesh-common")
-    api 'io.cloudevents:cloudevents-core'
-    api 'io.dropwizard.metrics:metrics-core'
-    api "io.dropwizard.metrics:metrics-healthchecks"
-    api "io.dropwizard.metrics:metrics-annotation"
-    api "io.dropwizard.metrics:metrics-json"
-    
-    implementation 'io.cloudevents:cloudevents-json-jackson:2.4.0'
+package org.apache.eventmesh.api.connector.storage.pull;
 
-    compileOnly 'org.projectlombok:lombok'
-    annotationProcessor 'org.projectlombok:lombok'
+import org.apache.eventmesh.api.connector.storage.data.PullRequest;
+
+import java.util.List;
+
+import io.cloudevents.CloudEvent;
+
+public interface PullCallback {
 
 
-	implementation "org.mockito:mockito-core"
-    implementation "org.powermock:powermock-module-junit4"
-    implementation "org.powermock:powermock-api-mockito2"
-	
-    testCompileOnly 'org.projectlombok:lombok:1.18.22'
-    testAnnotationProcessor 'org.projectlombok:lombok:1.18.22'
+    void onSuccess(PullRequest pullRequest, List<CloudEvent> cloudEvents);
 
 }
